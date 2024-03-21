@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"flag"
 	"fmt"
@@ -27,6 +28,9 @@ var (
 func main() {
 	flag.Parse()
 
+	// Grab stdin so we can have a confirmation prompt
+	reader := bufio.NewReader(os.Stdin)
+
 	gitlabClient, err := gitlab.NewClient(*gitlabToken)
 	if err != nil {
 		log.Fatalf("Failed to create client: %v", err)
@@ -43,6 +47,27 @@ func main() {
 	projects, err := fetchGitlabProjects(gitlabClient)
 	if err != nil {
 		fmt.Printf("Error loading Gitlab projects list: %v\n", err)
+		return
+	}
+
+	// Confirm the list of repositories to copy
+	projectNames := []string{}
+	for _, project := range projects {
+		projectNames = append(projectNames, project.Name)
+	}
+
+	fmt.Println("Are you sure you wish to copy the following repostories?")
+	fmt.Println(strings.Join(projectNames, "\n"))
+	fmt.Println("[yes/No]")
+
+	answer, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Printf("Error reading confirmation prompt: %v\n", err)
+		return
+	}
+
+	if answer != "yes" {
+		fmt.Println("Exiting.")
 		return
 	}
 
