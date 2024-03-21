@@ -63,7 +63,7 @@ func main() {
 	answer, err = reader.ReadString('\n')
 	if err != nil {
 		if errors.Is(err, io.EOF) {
-			fmt.Println("Process cancelled, exiting.")
+			fmt.Printf("\nProcess cancelled, exiting.")
 			return
 		}
 
@@ -72,7 +72,7 @@ func main() {
 	}
 
 	if !strings.EqualFold(answer, "yes") {
-		fmt.Println("Process cancelled, exiting.")
+		fmt.Printf("\nProcess cancelled, exiting.")
 		return
 	}
 
