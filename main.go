@@ -56,10 +56,10 @@ func main() {
 		found := false
 
 		for _, repo := range allRepos {
-			projName := *&project.Name
+			projName := project.Name
 			projName = strings.ReplaceAll(projName, " ", "-")
 
-			if strings.ToLower(projName) == strings.ToLower(*repo.Name) {
+			if strings.EqualFold(projName, *repo.Name) {
 				ignoredRepos = append(ignoredRepos, project.Name)
 				found = true
 				continue
@@ -125,7 +125,7 @@ func main() {
 }
 
 func fetchGitlabProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
-	projects := []*gitlab.Project{}
+	var projects []*gitlab.Project
 
 	opt := &gitlab.ListGroupProjectsOptions{
 		IncludeSubgroups: gitlab.Bool(true),
@@ -162,7 +162,7 @@ func fetchGithubRepositories(ctx context.Context, client *github.Client) ([]*git
 	// get all pages of results
 	var allRepos []*github.Repository
 	for {
-		repos := []*github.Repository{}
+		var repos []*github.Repository
 		var resp *github.Response
 		var err error
 
