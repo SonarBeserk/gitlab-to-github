@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -63,12 +65,17 @@ func main() {
 	var answer string
 	answer, err = reader.ReadString('\n')
 	if err != nil {
+		if errors.Is(err, io.EOF) {
+			fmt.Println("Process cancelled, exiting.")
+			return
+		}
+
 		fmt.Printf("Error reading confirmation prompt: %v\n", err)
 		return
 	}
 
-	if strings.EqualFold(answer, "yes") {
-		fmt.Println("Exiting.")
+	if !strings.EqualFold(answer, "yes") {
+		fmt.Println("Process cancelled, exiting.")
 		return
 	}
 
