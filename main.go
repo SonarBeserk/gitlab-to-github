@@ -42,7 +42,7 @@ func main() {
 
 	projects, err := fetchGitlabProjects(gitlabClient)
 	if err != nil {
-		fmt.Printf("Error loading Gitlab projects list: %v\n", err)
+		fmt.Printf("Error fetching Gitlab projects: %v\n", err)
 		return
 	}
 
@@ -72,7 +72,7 @@ func main() {
 
 	allRepos, err := fetchGithubRepositories(ctx, githubClient)
 	if err != nil {
-		fmt.Printf("Error loading Github repositories list: %v\n", err)
+		fmt.Printf("Error fetching Github repositories: %v\n", err)
 		return
 	}
 
@@ -91,14 +91,14 @@ func fetchGitlabProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 	if *gitlabOrg == "" {
 		proj, _, err := client.Projects.ListUserProjects("", nil)
 		if err != nil {
-			return nil, fmt.Errorf("error loading Gitlab projects list: %v", err)
+			return nil, fmt.Errorf("error listing Gitlab projects: %v", err)
 		}
 
 		projects = proj
 	} else {
 		proj, _, err := client.Groups.ListGroupProjects(gitlabOrg, opt)
 		if err != nil {
-			return nil, fmt.Errorf("error loading Gitlab projects list: %v", err)
+			return nil, fmt.Errorf("error listing Gitlab projects: %v", err)
 		}
 
 		projects = proj
@@ -130,7 +130,7 @@ func fetchGithubRepositories(ctx context.Context, client *github.Client) ([]*git
 		}
 
 		if err != nil {
-			return nil, fmt.Errorf("error loading Gitlab projects list: %v", err)
+			return nil, fmt.Errorf("error listing Github projects list: %v", err)
 		}
 		allRepos = append(allRepos, repos...)
 		if resp.NextPage == 0 {
