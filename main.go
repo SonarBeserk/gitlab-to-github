@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"slices"
 	"strings"
 
 	"github.com/google/go-github/v33/github"
@@ -55,9 +56,11 @@ func main() {
 		projectNames = append(projectNames, project.Name)
 	}
 
-	fmt.Println("Are you sure you wish to copy the following repostories?")
-	fmt.Println(strings.Join(projectNames, "\n"))
-	fmt.Println("[yes/No]")
+	// Attempt to alphabetize
+	slices.Sort(projectNames)
+
+	fmt.Println(strings.Join(projectNames, ", "))
+	fmt.Printf("Are you sure you wish to copy these repostories? [yes/No] ")
 
 	var answer string
 	answer, err = reader.ReadString('\n')
