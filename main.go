@@ -28,9 +28,6 @@ var (
 func main() {
 	flag.Parse()
 
-	// Grab stdin so we can have a confirmation prompt
-	reader := bufio.NewReader(os.Stdin)
-
 	gitlabClient, err := gitlab.NewClient(*gitlabToken)
 	if err != nil {
 		log.Fatalf("Failed to create Gitlab client: %v", err)
@@ -48,6 +45,9 @@ func main() {
 		fmt.Printf("Error loading Gitlab projects list: %v\n", err)
 		return
 	}
+
+	// Grab stdin so we can have a confirmation prompt
+	reader := bufio.NewReader(os.Stdin)
 
 	// Confirm the list of repositories to copy
 	projectNames := []string{}
