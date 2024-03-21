@@ -65,7 +65,7 @@ func main() {
 		return
 	}
 
-	if answer != "yes" {
+	if strings.EqualFold(answer, "yes") {
 		fmt.Println("Exiting.")
 		return
 	}
