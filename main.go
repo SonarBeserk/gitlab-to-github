@@ -55,6 +55,7 @@ func main() {
 		projectNames = append(projectNames, project.Name)
 	}
 
+	fmt.Println("Ignored Repos: [" + strings.Join(ignoredRepos, ", ") + "]")
 	fmt.Println("Are you sure you wish to copy the following repostories?")
 	fmt.Println(strings.Join(projectNames, "\n"))
 	fmt.Println("[yes/No]")
@@ -78,7 +79,6 @@ func main() {
 
 	copyRepositories(ctx, githubClient, projects, allRepos)
 
-	fmt.Println("Ignored Repos: [" + strings.Join(ignoredRepos, ", ") + "]")
 }
 
 func fetchGitlabProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
