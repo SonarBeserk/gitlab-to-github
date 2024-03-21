@@ -18,8 +18,6 @@ import (
 )
 
 var (
-	ignoredRepos []string = []string{}
-
 	gitlabOrg   = flag.String("gitlaborg", "", "The name of the gitlab org, left blank for user repos")
 	gitlabToken = flag.String("gitlabtoken", "", "The token used to access the github api")
 
@@ -57,7 +55,6 @@ func main() {
 		projectNames = append(projectNames, project.Name)
 	}
 
-	fmt.Println("Ignored Repos: [" + strings.Join(ignoredRepos, ", ") + "]")
 	fmt.Println("Are you sure you wish to copy the following repostories?")
 	fmt.Println(strings.Join(projectNames, "\n"))
 	fmt.Println("[yes/No]")
@@ -86,8 +83,10 @@ func main() {
 		return
 	}
 
-	copyRepositories(ctx, githubClient, projects, allRepos)
-
+	ignoredRepos := copyRepositories(ctx, githubClient, projects, allRepos)
+	if len(ignoredRepos) > 0 {
+		fmt.Printf("Ignored: [%v]\n", strings.Join(ignoredRepos, ", "))
+	}
 }
 
 func fetchGitlabProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
@@ -155,7 +154,8 @@ func fetchGithubRepositories(ctx context.Context, client *github.Client) ([]*git
 	return allRepos, nil
 }
 
-func copyRepositories(ctx context.Context, githubClient *github.Client, gitlabProjects []*gitlab.Project, githubProjects []*github.Repository) {
+func copyRepositories(ctx context.Context, githubClient *github.Client, gitlabProjects []*gitlab.Project, githubProjects []*github.Repository) []string {
+	ignoredRepos := []string{}
 	for _, project := range gitlabProjects {
 		found := false
 
@@ -224,4 +224,6 @@ func copyRepositories(ctx context.Context, githubClient *github.Client, gitlabPr
 			continue
 		}
 	}
+
+	return ignoredRepos
 }
