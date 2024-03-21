@@ -37,12 +37,11 @@ func main() {
 	}
 
 	ctx := context.Background()
-	ts := oauth2.StaticTokenSource(
+	tokenSrc := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: *githubToken},
 	)
-	tc := oauth2.NewClient(ctx, ts)
-
-	githubClient := github.NewClient(tc)
+	oauthClient := oauth2.NewClient(ctx, tokenSrc)
+	githubClient := github.NewClient(oauthClient)
 
 	projects, err := fetchGitlabProjects(gitlabClient)
 	if err != nil {
