@@ -60,7 +60,8 @@ func main() {
 	fmt.Println(strings.Join(projectNames, "\n"))
 	fmt.Println("[yes/No]")
 
-	answer, err := reader.ReadString('\n')
+	var answer string
+	answer, err = reader.ReadString('\n')
 	if err != nil {
 		fmt.Printf("Error reading confirmation prompt: %v\n", err)
 		return
@@ -71,7 +72,8 @@ func main() {
 		return
 	}
 
-	allRepos, err := fetchGithubRepositories(ctx, githubClient)
+	var allRepos []*github.Repository
+	allRepos, err = fetchGithubRepositories(ctx, githubClient)
 	if err != nil {
 		fmt.Printf("Error fetching Github repositories: %v\n", err)
 		return
