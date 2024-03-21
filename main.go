@@ -33,7 +33,7 @@ func main() {
 
 	gitlabClient, err := gitlab.NewClient(*gitlabToken)
 	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
+		log.Fatalf("Failed to create Gitlab client: %v", err)
 	}
 
 	ctx := context.Background()
