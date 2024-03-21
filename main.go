@@ -96,7 +96,12 @@ func fetchGitlabProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 		IncludeSubgroups: gitlab.Bool(true),
 	}
 
-	if *gitlabOrg == "" {
+	var org string
+	if githubOrg != nil {
+		org = *githubOrg
+	}
+
+	if org == "" {
 		proj, _, err := client.Projects.ListUserProjects("", nil)
 		if err != nil {
 			return nil, fmt.Errorf("error listing Gitlab projects: %v", err)
@@ -104,7 +109,7 @@ func fetchGitlabProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 
 		projects = proj
 	} else {
-		proj, _, err := client.Groups.ListGroupProjects(gitlabOrg, opt)
+		proj, _, err := client.Groups.ListGroupProjects(org, opt)
 		if err != nil {
 			return nil, fmt.Errorf("error listing Gitlab projects: %v", err)
 		}
