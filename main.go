@@ -100,8 +100,8 @@ func fetchGitlabProjects(client *gitlab.Client) ([]*gitlab.Project, error) {
 	}
 
 	var org string
-	if githubOrg != nil {
-		org = *githubOrg
+	if gitlabOrg != nil {
+		org = *gitlabOrg
 	}
 
 	if org == "" {
