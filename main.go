@@ -47,6 +47,13 @@ func main() {
 		return
 	}
 
+	var allRepos []*github.Repository
+	allRepos, err = fetchGithubRepositories(ctx, githubClient)
+	if err != nil {
+		fmt.Printf("Error fetching Github repositories: %v\n", err)
+		return
+	}
+
 	// Grab stdin so we can have a confirmation prompt
 	reader := bufio.NewReader(os.Stdin)
 
@@ -76,13 +83,6 @@ func main() {
 
 	if !strings.EqualFold(answer, "yes") {
 		fmt.Printf("\nProcess cancelled, exiting.")
-		return
-	}
-
-	var allRepos []*github.Repository
-	allRepos, err = fetchGithubRepositories(ctx, githubClient)
-	if err != nil {
-		fmt.Printf("Error fetching Github repositories: %v\n", err)
 		return
 	}
 
